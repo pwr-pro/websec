@@ -1,0 +1,19 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ p.title }}{% endblock %}
+{% block body %}
+<div class="container">
+    <article>
+        <header>{{ p.title }}</header>
+
+        <body>{{ p.content }}</body>
+        <footer dir="rtl">
+            {% if user["id"] == p.author_id %}
+            <a role="button" style="background-color: #f44336;border-color:  rgba(229, 57, 53, 0.25);">🗑️</a>
+            {% endif %}
+            <a role="button">Download</a>
+            <a role="button">Raw</a>
+            <a role="button">View</a>
+        </footer>
+    </article>
+</div>
+{% endblock %}

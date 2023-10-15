@@ -1,0 +1,29 @@
+<nav class="container-fluid">
+    <ul>
+        <li>
+            <a href="/" class="contrast"><strong>PYSTEBIN</strong></a>
+        </li>
+        {% if message %}
+        <li><mark>{{ message }}</mark></li>
+
+        {% endif %}
+    </ul>
+    <ul>
+        {% if user %}
+        <li>
+            <details role="list">
+                <summary aria-haspopup="listbox" role="button" class="primary outline">{{ user["login"] }}@github
+                </summary>
+                <ul role="listbox">
+                    <li><a href="/list">Your pastes</a></li>
+                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="/logout">Log out</a></li>
+                </ul>
+            </details>
+        </li>
+        {% else %}
+        <li><a href="/login" role="button">Sign in </a></li>
+        {# TODO: add signing in with api token #}
+        {% endif %}
+    </ul>
+</nav>

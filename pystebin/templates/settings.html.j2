@@ -1,0 +1,34 @@
+{% extends "base.html.j2" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <section>
+        <h1>SETTINGS</h1>
+    </section>
+    <article>
+        {# <h3>Account Data</h3> #}
+        <div class="grid">
+            <label for="username">Username<input id="username" class="outline" type="text"
+                    placeholder="{{ user['login'] }}" disabled></label>
+            <label for="idp">Identity Provider<input id="idp" type="text" placeholder="GitHub" disabled></label>
+        </div>
+    </article>
+    <article>
+        <h3 style="color:#f44336;">Account Deletion</h3>
+        <form action="/delete" method="get">
+            <fieldset>
+                <label for="confirm">
+                    <input type="checkbox" id="confirm" name="confirm" required>
+                    I'm sure I want to delete my account on <b>PYSTEBIN</b> and all data asscosiated with it.
+                </label>
+            </fieldset>
+            <button style="background-color: #f44336;border-color:  rgba(229, 57, 53, 0.25);">Delete Account</button>
+        </form>
+    </article>
+</div>
+
+{% endblock %}

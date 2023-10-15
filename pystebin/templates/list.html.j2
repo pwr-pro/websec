@@ -1,0 +1,28 @@
+{% extends "base.html.j2" %}
+
+{% block title %}List{% endblock %}
+
+{% block body %}
+<h1>Past pastes</h1>
+<table role="grid">
+    <thead>
+        <th scope="col">Creation Date</th>
+        <th scope="col">Title</th>
+        <th scope="col">Content</th>
+    </thead>
+    <tbody>
+        {% for p in pastes %}
+
+        <tr>
+            <th scope="row">{{ p.creation_time.date() }}</th>
+            <td>{{ p.title[:30]}} {% if p.title | length > 30 %}...{% endif %}</td>
+            <td>{{ p.content[:40]}} {% if p.content | length > 40 %}...{% endif %}</td>
+            <td dir="rtl">
+                <a role="button" style="background-color: #f44336;border-color:  rgba(229, 57, 53, 0.25);">🗑️</a>
+                <a href="/{{ p.id }}" role="button">🔍</a>
+            </td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+{% endblock %}

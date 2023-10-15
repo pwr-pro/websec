@@ -1,0 +1,15 @@
+{% extends "base.html.j2" %}
+
+{% block title %}401{% endblock %}
+
+{% block body %}
+<section style="margin: auto;width: 50%;padding-top: 5em;">
+    <h1 style="font-size: 4em;text-align: center;vertical-align: middle;">
+        401 Unauthorized
+        <br>
+        please sign in to view
+        /{{ request.url | replace(request.base_url, "") }}
+    </h1>
+</section>
+
+{% endblock %}
