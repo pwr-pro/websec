@@ -8,11 +8,12 @@
         <body>{{ p.content }}</body>
         <footer dir="rtl">
             {% if user["id"] == p.author_id %}
-            <a role="button" style="background-color: #f44336;border-color:  rgba(229, 57, 53, 0.25);">🗑️</a>
+            <a href="delete/{{ p.id }}" role="button"
+                style="background-color: #f44336;border-color:  rgba(229, 57, 53, 0.25);">🗑️</a>
             {% endif %}
             <a role="button">Download</a>
             <a role="button">Raw</a>
-            <a role="button">View</a>
+            <a href="/{{ p.id }}" role="button">View</a>
         </footer>
     </article>
 </div>

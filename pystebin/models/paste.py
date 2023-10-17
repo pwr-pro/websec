@@ -22,7 +22,9 @@ class Paste(BaseModel):
 
 
 class PasteView(BaseModel):
+    id: int
     title: str
+    author_id: int
     content_type: CONTENT_TYPE
     content: str
 

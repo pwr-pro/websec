@@ -6,7 +6,7 @@ from psycopg.rows import class_row
 
 from pystebin.models.paste import CONTENT_TYPE, PasteList, PasteView
 from pystebin.routes import templates
-from pystebin.routes.user import user
+from pystebin.routes.user import authorized, user
 
 if TYPE_CHECKING:
     import psycopg
@@ -69,7 +69,7 @@ async def post_paste(
 
 # TODO: get from db
 @router.get("/{id:int}")
-async def index_get(
+async def get_paste(
     request: Request,
     id: int,
     user: Annotated[dict[str, Any] | None, Depends(user)],
@@ -77,15 +77,38 @@ async def index_get(
     db: AsyncConnection = request.app.state.db
     async with db.cursor(row_factory=class_row(PasteView)) as cur:
         await cur.execute(
-            "select title, content_type, content from pastes where id = %s;", (id,)
+            """--sql
+            select id, title, content_type, content, author_id
+            from pastes
+            where id = %s;
+            """,
+            (id,),
         )
         post = await cur.fetchone()
         if post is None:
-            return RedirectResponse("/", 302)
+            return templates.TemplateResponse(
+                "404.html.j2", {"request": request, "page": id}
+            )
 
     return templates.TemplateResponse(
         "paste.html.j2", {"request": request, "user": user, "p": post}
     )
+
+
+@router.get("/delete/{id:int}")
+async def delete_paste(
+    request: Request,
+    id: int,
+    user: Annotated[dict[str, Any], Depends(authorized)],
+):
+    db: AsyncConnection = request.app.state.db
+    async with db.cursor() as cur:
+        await cur.execute(
+            "delete from pastes where id = %s and author_id = %s",
+            (id, user["id"]),
+        )
+        await db.commit()
+        return RedirectResponse("/list", 302)
 
 
 @router.get("/{page}")
