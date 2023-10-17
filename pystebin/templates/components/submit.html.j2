@@ -3,8 +3,8 @@
     <input type="text" name="title" id="title">
     <label for="content">Content</label>
     <textarea name="content" style="resize: vertical;font-family: monospace;min-height: 20em;"></textarea>
-    <label for="content-type">Content Type</label>
     {% if content_types | length > 1 %}
+    <label for="content-type">Content Type</label>
     <select name="content-type" id="content-type">
         {% for ct in content_types %}
         <option value="{{ ct.value }}">{{ ct.name }}</option>
