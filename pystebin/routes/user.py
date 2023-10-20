@@ -12,6 +12,8 @@ from pystebin.exception import UnauthorizedException
 from pystebin.routes import templates
 
 if TYPE_CHECKING:
+    import psycopg
+
     from pystebin.settings import Settings
 
     pass
@@ -136,6 +138,7 @@ async def delete(
 ):
     if user is None:
         return RedirectResponse("/", 302)
+
     if confirm is False:
         return templates.TemplateResponse(
             "settings.html.j2",
@@ -146,6 +149,10 @@ async def delete(
             },
         )
     else:
+        db: psycopg.AsyncConnection = request.app.state.db
+        async with db.cursor() as cur:
+            await cur.execute("""delete from pastes where author_id = %s;""")
+            await db.commit()
         response = templates.TemplateResponse(
             "index.html.j2",
             {
