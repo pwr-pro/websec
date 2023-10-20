@@ -1,12 +1,11 @@
 from typing import Sequence
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 
 import pystebin.database as database
 import pystebin.routes.index as index
 import pystebin.routes.paste as paste
 import pystebin.routes.user as user
-from pystebin.exception import UnauthorizedException
 from pystebin.routes import templates
 from pystebin.settings import Settings
 
@@ -25,9 +24,19 @@ async def startup():
     await database.init(app.state.db)
 
 
-@app.exception_handler(UnauthorizedException)
-async def unauthorized_handler(request: Request, exc: UnauthorizedException):
-    return templates.TemplateResponse("401.html.j2", {"request": request})
+@app.exception_handler(HTTPException)
+async def generic_exception(request: Request, exc: HTTPException):
+    print(exc)
+    if exc.status_code == 404:
+        return templates.TemplateResponse(
+            "404.html.j2", {"request": request, "page": exc.detail}
+        )
+    if exc.status_code == 401:
+        return templates.TemplateResponse("401.html.j2", {"request": request})
+
+    # TODO: 5XX exception
+    # else:
+    #     return templates.TemplateResponse()
 
 
 def main(argv: Sequence[str] | None = None) -> int:

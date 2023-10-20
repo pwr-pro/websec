@@ -2,21 +2,19 @@ import json
 from typing import TYPE_CHECKING, Annotated, Any
 
 import httpx
-from fastapi import Cookie, Depends, Form, status
+from fastapi import Cookie, Depends, Form, HTTPException, status
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse
 from fastapi.routing import APIRouter
 from jose import JWSError, jws
 
-from pystebin.exception import UnauthorizedException
 from pystebin.routes import templates
 
 if TYPE_CHECKING:
-    import psycopg
+    from psycopg import AsyncConnection
 
     from pystebin.settings import Settings
 
-    pass
 
 router = APIRouter()
 
@@ -55,7 +53,7 @@ def authorized(user: Annotated[dict[str, Any], Depends(user)]):
     if user:
         return user
     else:
-        raise UnauthorizedException(401)
+        raise HTTPException(401)
 
 
 @router.get("/login")
@@ -149,7 +147,7 @@ async def delete(
             },
         )
     else:
-        db: psycopg.AsyncConnection = request.app.state.db
+        db: AsyncConnection = request.app.state.db
         async with db.cursor() as cur:
             await cur.execute("""delete from pastes where author_id = %s;""")
             await db.commit()
