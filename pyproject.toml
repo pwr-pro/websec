@@ -6,7 +6,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pystebin"
-dynamic = ["version", "description"]
+dynamic = ["version"]
+description = "Simple Pastebin Written in Python"
 authors = []
 requires-python = ">=3.10"
 dependencies = [
@@ -14,11 +15,12 @@ dependencies = [
     "httpx",
     "jinja2",
     "psycopg",
+    "pydantic-settings",
     "python-jose[cryptography]",
     "python-multipart",
     "uvicorn[standard]",
 ]
-scripts.name-undecided = "name_undecided.main:main"
+scripts.pystebin = "pystebin.main:main"
 
 [project.optional-dependencies]
 dev = ["ruff", "black"]
