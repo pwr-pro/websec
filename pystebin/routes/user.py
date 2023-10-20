@@ -78,9 +78,11 @@ async def login(request: Request, code: str | None = None):
     github_token: dict[str, Any] = r.json()
     if github_token.get("error") is not None:
         return RedirectResponse(
-            request.base_url, status_code=status.HTTP_400_BAD_REQUEST
+            f"{config.pystebin.domain}/", status_code=status.HTTP_400_BAD_REQUEST
         )
-    response = RedirectResponse(request.base_url, status_code=status.HTTP_303_SEE_OTHER)
+    response = RedirectResponse(
+        f"{config.pystebin.domain}/", status_code=status.HTTP_303_SEE_OTHER
+    )
     access_token = github_token["access_token"]
     github_user = await get_user_data(access_token)
     cookie = jws.sign(
@@ -120,8 +122,9 @@ async def logout(
     request: Request,
     user: Annotated[dict[str, Any], Depends(authorized)],
 ):
+    config: Settings = request.app.state.config
     if user is None:
-        return RedirectResponse(request.base_url, status.HTTP_302_FOUND)
+        return RedirectResponse(f"{config.pystebin.domain}/", status.HTTP_302_FOUND)
     response = templates.TemplateResponse(
         "index.html.j2",
         {"request": request, "user": None, "message": "Successfully logged out!"},
@@ -136,8 +139,9 @@ async def delete(
     user: Annotated[dict[str, Any], Depends(authorized)],
     confirm: Annotated[bool, Form()] = False,
 ):
+    config: Settings = request.app.state.config
     if user is None:
-        return RedirectResponse(request.base_url, status.HTTP_302_FOUND)
+        return RedirectResponse(f"{config.pystebin.domain}/", status.HTTP_302_FOUND)
 
     if confirm is False:
         return templates.TemplateResponse(
