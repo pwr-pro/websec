@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Annotated, Any
 
-from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
+from fastapi.responses import PlainTextResponse, RedirectResponse
 from psycopg.rows import class_row
 
 from pystebin.models.paste import CONTENT_TYPE, PasteList, PasteView
@@ -9,10 +9,27 @@ from pystebin.routes import templates
 from pystebin.routes.user import authorized, user
 
 if TYPE_CHECKING:
-    import psycopg
     from psycopg import AsyncConnection
 
 router = APIRouter()
+
+
+async def fetch_paste(id: int, request: Request):
+    db: AsyncConnection = request.app.state.db
+    async with db.cursor(row_factory=class_row(PasteView)) as cur:
+        await cur.execute(
+            """--sql
+            select id, title, content_type, content, author_id
+            from pastes
+            where id = %s;
+            """,
+            (id,),
+        )
+        post = await cur.fetchone()
+        if post is None:
+            raise HTTPException(status_code=404, detail=f"/{id}")
+
+        return post
 
 
 @router.get("/list")
@@ -47,7 +64,7 @@ async def post_paste(
 ):
     if user is None:
         return RedirectResponse("/", 302)
-    db: psycopg.AsyncConnection = request.app.state.db
+    db: AsyncConnection = request.app.state.db
     async with db.cursor() as cur:
         await cur.execute(
             """--sql
@@ -69,28 +86,28 @@ async def post_paste(
 @router.get("/{id:int}")
 async def get_paste(
     request: Request,
-    id: int,
+    post: Annotated[PasteView, Depends(fetch_paste)],
     user: Annotated[dict[str, Any] | None, Depends(user)],
 ):
-    db: AsyncConnection = request.app.state.db
-    async with db.cursor(row_factory=class_row(PasteView)) as cur:
-        await cur.execute(
-            """--sql
-            select id, title, content_type, content, author_id
-            from pastes
-            where id = %s;
-            """,
-            (id,),
-        )
-        post = await cur.fetchone()
-        if post is None:
-            return templates.TemplateResponse(
-                "404.html.j2", {"request": request, "page": id}
-            )
-
     return templates.TemplateResponse(
         "paste.html.j2", {"request": request, "user": user, "p": post}
     )
+
+
+@router.get("/raw/{id:int}")
+async def raw_paste(
+    post: Annotated[PasteView, Depends(fetch_paste)],
+):
+    return PlainTextResponse(post.content)
+
+
+@router.get("/download/{id:int}")
+async def download_paste(
+    post: Annotated[PasteView, Depends(fetch_paste)],
+):
+    response = PlainTextResponse(post.content)
+    response.headers["Content-disposition"] = f"attachment; filename={post.title}.txt"
+    return response
 
 
 @router.get("/delete/{id:int}")
