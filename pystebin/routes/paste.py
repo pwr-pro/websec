@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 router = APIRouter()
 
 
-# TODO: list from actual db
 @router.get("/list")
 async def list_pastes(
     request: Request,
@@ -67,7 +66,6 @@ async def post_paste(
         return RedirectResponse(f"/{id[0]}", 302)
 
 
-# TODO: get from db
 @router.get("/{id:int}")
 async def get_paste(
     request: Request,
