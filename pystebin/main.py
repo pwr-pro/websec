@@ -1,4 +1,3 @@
-import sys
 from typing import Sequence
 
 from fastapi import FastAPI, Request
@@ -31,7 +30,7 @@ async def unauthorized_handler(request: Request, exc: UnauthorizedException):
     return templates.TemplateResponse("401.html.j2", {"request": request})
 
 
-def main(argv: Sequence[str] = sys.argv[1:]) -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     import uvicorn
 
     uvicorn.run(app)
