@@ -53,7 +53,7 @@ def authorized(user: Annotated[dict[str, Any], Depends(user)]):
     if user:
         return user
     else:
-        raise HTTPException(401)
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED)
 
 
 @router.get("/login")
@@ -77,8 +77,10 @@ async def login(request: Request, code: str | None = None):
         )
     github_token: dict[str, Any] = r.json()
     if github_token.get("error") is not None:
-        return RedirectResponse("/", status_code=status.HTTP_400_BAD_REQUEST)
-    response = RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(
+            request.base_url, status_code=status.HTTP_400_BAD_REQUEST
+        )
+    response = RedirectResponse(request.base_url, status_code=status.HTTP_303_SEE_OTHER)
     access_token = github_token["access_token"]
     github_user = await get_user_data(access_token)
     cookie = jws.sign(
@@ -119,7 +121,7 @@ async def logout(
     user: Annotated[dict[str, Any], Depends(authorized)],
 ):
     if user is None:
-        return RedirectResponse("/", 302)
+        return RedirectResponse(request.base_url, status.HTTP_302_FOUND)
     response = templates.TemplateResponse(
         "index.html.j2",
         {"request": request, "user": None, "message": "Successfully logged out!"},
@@ -135,7 +137,7 @@ async def delete(
     confirm: Annotated[bool, Form()] = False,
 ):
     if user is None:
-        return RedirectResponse("/", 302)
+        return RedirectResponse(request.base_url, status.HTTP_302_FOUND)
 
     if confirm is False:
         return templates.TemplateResponse(
@@ -160,6 +162,5 @@ async def delete(
             },
         )
         response.delete_cookie("access_token")
-        response.delete_cookie("github_user")
 
         return response

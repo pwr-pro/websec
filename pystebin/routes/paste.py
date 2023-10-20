@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Annotated, Any
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.responses import PlainTextResponse, RedirectResponse
 from psycopg.rows import class_row
 
@@ -27,7 +27,7 @@ async def fetch_paste(id: int, request: Request):
         )
         post = await cur.fetchone()
         if post is None:
-            raise HTTPException(status_code=404, detail=f"/{id}")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"/{id}")
 
         return post
 
@@ -35,14 +35,8 @@ async def fetch_paste(id: int, request: Request):
 @router.get("/list")
 async def list_pastes(
     request: Request,
-    user: Annotated[dict[str, Any] | None, Depends(user)],
+    user: Annotated[dict[str, Any], Depends(authorized)],
 ):
-    if user is None:
-        return templates.TemplateResponse(
-            "index.html.j2",
-            {"request": request, "user": user, "message": "Unauthorized!"},
-        )
-
     db: AsyncConnection = request.app.state.db
 
     async with db.cursor(row_factory=class_row(PasteList)) as cur:
@@ -57,13 +51,11 @@ async def list_pastes(
 @router.post("/")
 async def post_paste(
     request: Request,
-    user: Annotated[dict[str, Any] | None, Depends(user)],
+    user: Annotated[dict[str, Any], Depends(authorized)],
     title: Annotated[str, Form()],
     content: Annotated[str, Form()],
     content_type: Annotated[str, Form(alias="content-type")] = CONTENT_TYPE.Plaintext,
 ):
-    if user is None:
-        return RedirectResponse("/", 302)
     db: AsyncConnection = request.app.state.db
     async with db.cursor() as cur:
         await cur.execute(
@@ -78,9 +70,9 @@ async def post_paste(
         await db.commit()
         _id = await cur.fetchone()
         if (id := _id) is None:
-            return RedirectResponse("/", 302)
+            return RedirectResponse(request.base_url, status.HTTP_302_FOUND)
 
-        return RedirectResponse(f"/{id[0]}", 302)
+        return RedirectResponse(f"{request.base_url}{id[0]}", status.HTTP_302_FOUND)
 
 
 @router.get("/{id:int}")
@@ -123,7 +115,7 @@ async def delete_paste(
             (id, user["id"]),
         )
         await db.commit()
-        return RedirectResponse("/list", 302)
+        return RedirectResponse(f"{request.base_url}list", status.HTTP_302_FOUND)
 
 
 @router.get("/{page}")
