@@ -12,7 +12,7 @@ from pystebin.exception import UnauthorizedException
 from pystebin.routes import templates
 
 if TYPE_CHECKING:
-    from pystebin.config import Config
+    from pystebin.settings import Settings
 
     pass
 
@@ -36,7 +36,7 @@ async def user(
     requset: Request,
     access_token: str | None = Cookie(default=None),
 ) -> dict[str, Any] | None:
-    config: Config = requset.app.state.config
+    config: Settings = requset.app.state.config
     if access_token:
         try:
             result = jws.verify(
@@ -58,7 +58,7 @@ def authorized(user: Annotated[dict[str, Any], Depends(user)]):
 
 @router.get("/login")
 async def login(request: Request, code: str | None = None):
-    config: Config = request.app.state.config
+    config: Settings = request.app.state.config
     if code is None:
         return RedirectResponse(
             f"https://github.com/login/oauth/authorize?client_id={config.github.client_id}",
