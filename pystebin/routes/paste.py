@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import PlainTextResponse, RedirectResponse
 from psycopg.rows import class_row
 
-from pystebin.models.paste import CONTENT_TYPE, PasteList, PasteView
+from pystebin.models import CONTENT_TYPE, PasteList, PasteView
 from pystebin.routes import templates
 from pystebin.routes.user import authorized, user
 

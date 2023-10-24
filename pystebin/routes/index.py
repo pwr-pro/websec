@@ -3,7 +3,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 
-from pystebin.models.paste import CONTENT_TYPE
+from pystebin.models import CONTENT_TYPE
 from pystebin.routes import templates
 from pystebin.routes.user import user
 
