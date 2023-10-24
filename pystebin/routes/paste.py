@@ -11,8 +11,6 @@ from pystebin.routes.user import authorized, user
 if TYPE_CHECKING:
     from psycopg import AsyncConnection
 
-    from pystebin.settings import Settings
-
 router = APIRouter()
 
 
@@ -59,7 +57,6 @@ async def post_paste(
     content_type: Annotated[str, Form(alias="content-type")] = CONTENT_TYPE.Plaintext,
 ):
     db: AsyncConnection = request.app.state.db
-    config: Settings = request.app.state.config
     async with db.cursor() as cur:
         await cur.execute(
             """--sql
@@ -73,11 +70,9 @@ async def post_paste(
         await db.commit()
         _id = await cur.fetchone()
         if (id := _id) is None:
-            return RedirectResponse(f"{config.pystebin.domain}/", status.HTTP_302_FOUND)
+            return RedirectResponse(request.base_url, status.HTTP_302_FOUND)
 
-        return RedirectResponse(
-            f"{config.pystebin.domain}/{id[0]}", status.HTTP_302_FOUND
-        )
+        return RedirectResponse(f"{request.base_url}{id[0]}", status.HTTP_302_FOUND)
 
 
 @router.get("/{id:int}")
@@ -114,14 +109,13 @@ async def delete_paste(
     user: Annotated[dict[str, Any], Depends(authorized)],
 ):
     db: AsyncConnection = request.app.state.db
-    config: Settings = request.app.state.config
     async with db.cursor() as cur:
         await cur.execute(
             "delete from pastes where id = %s and author_id = %s",
             (id, user["id"]),
         )
         await db.commit()
-        return RedirectResponse(f"{config.pystebin.domain}/list", status.HTTP_302_FOUND)
+        return RedirectResponse(f"{request.base_url}list", status.HTTP_302_FOUND)
 
 
 @router.get("/{page}")

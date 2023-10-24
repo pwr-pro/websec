@@ -7,7 +7,6 @@ from typing import Any, Self, Type
 
 from pydantic import Field
 from pydantic.fields import FieldInfo
-from pydantic_core import Url
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic_settings.sources import PydanticBaseSettingsSource
 
@@ -25,7 +24,7 @@ class Algorithm(str, Enum):
 
 
 class AppSettings(BaseSettings):
-    domain: Url = Url("http://localhost:8080/")
+    domain: str = "http://localhost:8080/"
 
 
 class AuthSettings(BaseSettings):
@@ -85,7 +84,7 @@ class TomlConfigSettingsSource(PydanticBaseSettingsSource):
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="PYSTEBIN_", env_nested_delimiter="__")
-    pystebin: AppSettings = AppSettings()
+    app: AppSettings = AppSettings()
     auth: AuthSettings
     github: GitHubSettings
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)
