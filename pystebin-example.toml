@@ -1,0 +1,18 @@
+[app]
+domain = "127.0.0.1"
+port = 8080
+
+[auth]
+secret = "<jwt-signing-secret>"
+algorithm = "HS256"
+
+[github]
+client_id = "<github-client-id>"
+client_secret = "<github-client-secret>"
+
+[db]
+host = "postgres"
+database = "postgres"
+user = "postgres"
+password = "password"
+port = 5432
