@@ -1,16 +1,22 @@
+import asyncio
+import logging
+
 import psycopg
 
 from pystebin.settings import DatabaseSettings
 
+log = logging.getLogger(__name__)
+
 
 async def connect(config: DatabaseSettings):
+    await asyncio.sleep(5)
     con = await psycopg.AsyncConnection.connect(
-        f"postgresql://{config.user}@{config.host}:{config.port}/{config.database}"
+        f"postgresql://{config.user}:{config.password}@{config.host}:{config.port}/{config.database}"
     )
     async with con.cursor() as cur:
         await cur.execute("select version()")
         version = await cur.fetchone()
-        print(f"Connected with: {version[0]}") if version else None
+        log.info(f"Connected with: {version[0]}") if version else None
     return con
 
 
