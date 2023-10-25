@@ -24,7 +24,9 @@ class Algorithm(str, Enum):
 
 
 class AppSettings(BaseSettings):
-    domain: str = "http://localhost:8080/"
+    host: str = "127.0.0.1"
+    port: int = 8000
+
 
 
 class AuthSettings(BaseSettings):
