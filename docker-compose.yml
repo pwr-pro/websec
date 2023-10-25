@@ -1,0 +1,42 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    networks:
+      - net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    image: ghcr.io/pwr-pro/pystebin:latest
+    container_name: app
+    environment:
+      PYSTEBIN_APP__HOST: 0.0.0.0
+      PYSTEBIN_APP__PORT: 8000
+      PYSTEBIN_AUTH__SECRET:  <jwt-signing-secret>
+      PYSTEBIN_AUTH__ALGORITHM: HS256
+      PYSTEBIN_GITHUB__CLIENT_ID: <github-client-id>
+      PYSTEBIN_GITHUB__CLIENT_SECRET:  <github-client-secret>
+      PYSTEBIN_DATABASE__HOST: db
+      PYSTEBIN_DATABASE__DATABASE: postgres
+      PYSTEBIN_DATABASE__USER: postgres
+      PYSTEBIN_DATABASE__PASSWORD: password
+      PYSTEBIN_DATABASE__PORT: 5432
+    networks:
+      - net
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+
+networks:
+  net:
+    driver: bridge
