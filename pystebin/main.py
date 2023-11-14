@@ -64,7 +64,7 @@ async def handle_404(request: Request, exc: HTTPException):
 def main(argv: Sequence[str] | None = None) -> int:
     import uvicorn
 
-    uvicorn.run(app, host=config.app.host, port=config.app.port)
+    uvicorn.run(app, host=config.app.host, port=config.app.port, server_header=False)
 
     return 0
 
