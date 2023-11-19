@@ -6,11 +6,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Container image
-        run: docker build . --file Dockerfile --tag localbuild/testimage:latest
+        run: docker build . --file Containerfile --tag ghcr.io/pwr-pro/pystebin:latest
       - uses: anchore/scan-action@v3
         id: scan
         with:
-          image: "localbuild/testimage:latest"
+          image: "ghcr.io/pwr-pro/pystebin:latest"
       - name: upload Anchore scan SARIF report
         uses: github/codeql-action/upload-sarif@v2
         with:
