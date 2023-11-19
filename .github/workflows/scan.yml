@@ -36,5 +36,5 @@ jobs:
       - name: Push Docker image
         uses: docker/build-push-action@v5
         with:
-          tag: latest
           push: true
+          tags: latest
