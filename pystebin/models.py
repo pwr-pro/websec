@@ -31,6 +31,7 @@ class PasteView(BaseModel):
 
 class PasteList(BaseModel):
     id: int
+    author_id: int
     title: str
     content: str
     creation_time: datetime
