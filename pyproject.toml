@@ -25,6 +25,10 @@ scripts.pystebin = "pystebin.main:main"
 [project.optional-dependencies]
 dev = ["ruff", "black"]
 
+[tool.setuptools.packages]
+find = {}
+
+
 # Tools
 
 [tool.mypy]
