@@ -4,14 +4,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Build the Container image
-        run: docker build . --file Containerfile --tag ghcr.io/pwr-pro/pystebin:latest
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Containerfile
+          push: false
+          registry: ghcr.io
+
       - uses: anchore/scan-action@v3
         id: scan
         with:
           image: "ghcr.io/pwr-pro/pystebin:latest"
+          fail-build: true
+          severity-cutoff: critical
+
       - name: upload Anchore scan SARIF report
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
+
+      - name: Log in to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USER }}
+          password: ${{ secrets.GHCR_KEY }}
+      
+      - name: Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          tag: latest
+          push: true
