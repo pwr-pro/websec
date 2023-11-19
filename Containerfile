@@ -12,4 +12,6 @@ COPY --chown=1000:1000 . /pystebin
 
 RUN pip install --user --no-warn-script-location /pystebin
 
+LABEL org.opencontainers.image.source https://github.com/pwr-pro/websec
+
 CMD [ "/pystebin/.local/bin/pystebin" ]
