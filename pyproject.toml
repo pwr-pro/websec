@@ -9,7 +9,7 @@ name = "pystebin"
 dynamic = ["version"]
 description = "Simple Pastebin Written in Python"
 authors = []
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
     "fastapi",
     "httpx",
@@ -19,6 +19,7 @@ dependencies = [
     "python-jose[cryptography]",
     "python-multipart",
     "uvicorn[standard]",
+    "tomli; python_version < '3.11'",
 ]
 scripts.pystebin = "pystebin.main:main"
 
@@ -27,7 +28,6 @@ dev = ["ruff", "black"]
 
 [tool.setuptools.packages]
 find = {}
-
 
 # Tools
 
@@ -47,7 +47,7 @@ strict = true
 extend-select = ["ANN", "C4", "RUF", "SIM", "TCH", "W"]
 ignore = ["ANN201"]
 show-fixes = true
-target-version = "py38"
+target-version = "py39"
 
 [tool.ruff.pydocstyle]
 convention = "google"

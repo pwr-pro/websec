@@ -8,6 +8,7 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t ghcr.io/pwr-pro/pystebin:latest -f Containerfile .
+      
 
       - uses: anchore/scan-action@v3
         id: scan
@@ -15,11 +16,6 @@ jobs:
           image: "ghcr.io/pwr-pro/pystebin:latest"
           fail-build: true
           severity-cutoff: critical
-
-      - name: upload Anchore scan SARIF report
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
 
       - name: Log in to ghcr.io
         uses: docker/login-action@v3
@@ -30,3 +26,4 @@ jobs:
       
       - name: Push Docker image
         run: docker push ghcr.io/pwr-pro/pystebin:latest
+      

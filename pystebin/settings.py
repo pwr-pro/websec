@@ -1,6 +1,5 @@
 # ruff: noqa: ANN101, ANN401
 import os
-import tomllib
 from enum import Enum
 from pathlib import Path
 from typing import Any, Self, Type
@@ -10,6 +9,10 @@ from pydantic.fields import FieldInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic_settings.sources import PydanticBaseSettingsSource
 
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib # pyright: ignore[reportMissingImports]
 
 class Algorithm(str, Enum):
     HS256 = "HS256"
