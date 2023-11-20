@@ -46,7 +46,7 @@ async def list_pastes(
     db: AsyncConnection = request.app.state.db
 
     async with db.cursor(row_factory=class_row(PasteList)) as cur:
-        await cur.execute("select id, title, content, creation_time, author_id from pastes where author_id = %s;", (user["id"]))
+        await cur.execute("select id, title, content, creation_time, author_id from pastes where author_id = %s;", (user["id"],))
         pastes = await cur.fetchall()
 
     return templates.TemplateResponse(
