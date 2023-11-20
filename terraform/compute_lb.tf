@@ -25,8 +25,12 @@ resource "openstack_compute_instance_v2" "pystebin_lb" {
 
 resource "openstack_networking_port_v2" "lb2provider" {
   name                  = "lb-provider"
-  network_id            = data.openstack_networking_network_v2.provider.id
+  network_id            = data.openstack_networking_network_v2.public.id
   port_security_enabled = false
+  fixed_ip {
+    ip_address = "10.20.0.4"
+    subnet_id  = data.openstack_networking_subnet_v2.public_subnet.id
+  }
 }
 
 resource "openstack_networking_port_v2" "lb2int" {

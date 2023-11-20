@@ -40,23 +40,23 @@ users:
 
 # Configure Netplan
 write_files:
-  - path: /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
-    permissions: '0644'
-    content: |
-      network: {config: disabled}
-
-  - path: /etc/netplan/60-config.yaml
-    permissions: '0644'
-    content: |
-      network:
-          version: 2
-          ethernets:
-              ens3:
-                dhcp4: true
-              ens4:
-                addresses: [192.168.199.10/24]
-                dhcp4: false
-
+#  - path: /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
+#    permissions: '0644'
+#    content: |
+#      network: {config: disabled}
+#
+#  - path: /etc/netplan/60-config.yaml
+#    permissions: '0644'
+#    content: |
+#      network:
+#          version: 2
+#          ethernets:
+#              ens3:
+#                dhcp4: true
+#              ens4:
+#                addresses: [192.168.199.10/24]
+#                dhcp4: false
+#
 
   - path: /etc/caddy/Caddyfile
     permission: '0600'
@@ -83,7 +83,7 @@ write_files:
 
 
 runcmd:
-  - rm /etc/netplan/50-cloud-init.yaml
-  - netplan generate
-  - netplan apply
+#  - rm /etc/netplan/50-cloud-init.yaml
+#  - netplan generate
+#  - netplan apply
   - systemctl enable --now caddy
