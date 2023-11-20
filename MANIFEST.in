@@ -1,0 +1,2 @@
+include pystebin/templates/*.j2
+include pystebin/templates/components/*.j2

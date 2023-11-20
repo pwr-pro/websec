@@ -9,5 +9,5 @@ terraform {
 }
 
 provider "openstack" {
-  cloud = var.cloud
+  cloud = "nuc"
 }

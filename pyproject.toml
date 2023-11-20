@@ -29,6 +29,8 @@ dev = ["ruff", "black"]
 [tool.setuptools.packages]
 find = {}
 
+[tool.setuptools_scm]
+
 # Tools
 
 [tool.mypy]

@@ -4,7 +4,7 @@ RUN :\
     && install -d -o 1000 -g 1000 /pystebin \
     && adduser -h /pystebin -D -s /bin/sh -H -u 1000 pystebin \
     && apk --update add --upgrade --no-cache \
-    python3 python3-dev py3-pip libpq build-base
+    python3 python3-dev py3-pip libpq build-base git
 
 USER pystebin
 
