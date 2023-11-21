@@ -49,6 +49,16 @@
 
 ---
 
+## Load Balancer Caddy
+
+- Load balancing możliwy w jedną linijkę:\
+    `reverse_proxy app1:port app2:port`
+- Pozyskiwanie certyfikatów możliwe w 0 linijek:\
+    Caddy automatycznie pobiera i aktualizuje certyfikaty z “Let’s Encrypt”
+```
+
+---
+
 ## CI/CD
 
 - Repozytorium hostowane na GitHub'ie więc GitHub Actions \
@@ -73,12 +83,12 @@
 ---
 
 Schemat architektury \
-<img src="./img/diagram.png" height=800>
+<img src="./img/diagram.png" height=400>
 
 ---
 
 Diagram z Horizon (WebUI OpenStacka) \
-<img src="./img/horizon.png" height=800>
+<img src="./img/horizon.png" height=400>
 
 
 ---
