@@ -66,7 +66,8 @@ write_files:
           # keep referrer data off of HTTP connections 
           Referrer-Policy no-referrer-when-downgrade 
           # Referrer-Policy "strict-origin-when-cross-origin" 
-
+          #CSP - Allow content only from a trusted domain and all its subdomains; Block all scripts
+          Content-Security-Policy "default-src 'self' pystebin.duckdns.org; script-src 'none'; style-src 'self' cdn.jsdelivr.net;"
           # enable HSTS 
           Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" 
           # Enable cross-site filter (XSS) and tell browser to block detected attacks 
