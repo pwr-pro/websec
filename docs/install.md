@@ -8,7 +8,7 @@ Należy stworzyć aplikację oraz zapisać `client secret` oraz `client id`
 
 
 
-## Ręczniea
+## Ręcznie
 Należy stworzyć środowisko wirtualne z pythonem oraz zainstalować program 
 ```shell
 $ python -m venv venv
