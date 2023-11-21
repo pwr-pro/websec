@@ -12,7 +12,7 @@ client_secret = "<github-client-secret>"
 
 [db]
 host = "postgres"
-database = "postgres"
+database = "<database-password>"
 user = "postgres"
 password = "password"
 port = 5432
