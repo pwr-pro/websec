@@ -70,12 +70,10 @@ write_files:
           Content-Security-Policy "default-src 'self' pystebin.duckdns.org; script-src 'none'; style-src 'self' cdn.jsdelivr.net; img-src 'self' data:;"
           # enable HSTS 
           Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" 
-          # Enable cross-site filter (XSS) and tell browser to block detected attacks 
-          X-Xss-Protection "1; mode=block" 
           # disable clients from sniffing the media type 
           X-Content-Type-Options "nosniff" 
           # clickjacking protection 
-          X-Frame-Options "DENY" Content-Security-Policy "upgrade-insecure-requests" 
+          X-Frame-Options "DENY"
         }
                   
         reverse_proxy ${app_hosts}
