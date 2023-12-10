@@ -15,7 +15,7 @@ $ python -m venv venv
 $ source venv/bin/activate
 (venv) $ pip install https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app
 ```
-Następnie podać wymagane zmienne jak w przykładowym `[pystebin.toml](/pystebin-example.toml)` lub poprzez zmienne środowiskowe jak w `[docker-compose.yml](/docker-compose.yml)`
+Następnie podać wymagane zmienne jak w przykładowym [`pystebin.toml`](/pystebin-example.toml) lub poprzez zmienne środowiskowe jak w [`docker-compose.yml`](/docker-compose.yml)
 > Program szuka pliku konfiguracyjnego w /etc/pystebin.toml
 
 ```
